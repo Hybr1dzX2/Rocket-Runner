@@ -1,5 +1,22 @@
-  services:
-  - type: static
-    name: Rocket-Runner
-    env: docker
-    plan: free
+  - type: web
+    name: rocket-runner
+    runtime: static
+    buildCommand: yarn build
+    staticPublishPath: ./build
+    pullRequestPreviewsEnabled: true # optional
+    buildFilter:
+      paths:
+      - src/**/*.js
+      ignoredPaths:
+      - src/**/*.test.js
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: sameorigin
+    routes:
+      - type: redirect
+        source: /old
+        destination: /new
+      - type: rewrite
+        source: /a/*
+        destination: /a
